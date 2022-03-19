@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	APIKEY string
-	APIURL string
+	APIKEY   string
+	APIURL   string
+	POSTCODE string
 )
 
 type restaurant struct {
@@ -50,15 +51,6 @@ func apiCall(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getPostcode(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Fprintln(w, "Postcode: ", r.Form.Get("postcode"))
-
-}
-
 func main() {
 	fmt.Println("Enter your postcode: ")
 	var postcode string
@@ -67,6 +59,7 @@ func main() {
 	APIURL = "https://uk.api.just-eat.io/restaurants/bypostcode/" + postcode
 
 	router := mux.NewRouter()
+	//router.HandleFunc("/postcode", getPostcodeHandler)
 	router.HandleFunc("/", apiCall)
 	fmt.Println("Listening of port 8080")
 	http.ListenAndServe(":8080", router)

@@ -1,24 +1,17 @@
 
-formSubmitEventHandler();
-
-getRestaurants();
-
-handleClearAll();
-
-
 function formSubmitEventHandler() {
     let button = document.getElementById("submit");
     button.addEventListener('click', function(event) {
         event.preventDefault();
         getPostcode();
     })
-};
+}
 
 function getPostcode(){
     let postcode = document.getElementById("postcode").value
     if (postcode !== ""){
         console.log(postcode);
-        showRestaurants(postcode);
+        getRestaurants();
         return postcode;
     } else {
         console.log("Invalid input, please try again")
@@ -26,35 +19,50 @@ function getPostcode(){
     }
 }
 
-function getRestaurants(){
-fetch('http://localhost:8080/').then(function (response) {
-    // The API call was successful!
-    if (response.ok) {
-        return response.json();
-    } else {
-        return Promise.reject(response);
-    }
-}).then(function (data) {
-    // This is the JSON from our response
-    console.log(JSON.stringify(data));
-    showRestaurants(JSON.stringify(data));
-}).catch(function (err) {
-    // There was an error
-    console.warn('Something went wrong.', err);
-});
+async function getRestaurants() {
+    try {
+        const response = await fetch('http://localhost:8080/')
 
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            display(data)
+            return data;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+function display(data) {
+    let items = data
+    console.log(items)
+    for (let key in items) {
+        items[key].forEach( function(item) {
+            console.log(item)
+            for (const [key, value] of Object.entries(item)) {
+                let newData = (`<br>${key}: ${value}<br>`)
+                showRestaurants(newData)
+            }
+        })
+    }
 }
 
 function showRestaurants(data){
     let restaurants = document.getElementById('restaurants')
+    let restaurantHeader = document.getElementById('restaurant-header')
+    restaurantHeader.innerHTML = `<h4>Restaurants</h4>`
     restaurants.innerHTML += data;
 }
 
-
 function handleClearAll() {
-    let button = document.getElementById('clearAll');
+    let button = document.getElementById('clear');
     button.addEventListener('click', function(event) {
-        event.preventDefault();
-        document.getElementById('restaurants').innerHTML += '';
+        event.preventDefault()
+        document.getElementById("restaurants").innerHTML = "";
     })
 }
+
+handleClearAll();
+
+formSubmitEventHandler();

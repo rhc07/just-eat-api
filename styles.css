@@ -1,1 +1,35 @@
-body {background-color: ff8000;}
+html {
+    height: 100vh;
+    min-width: 600px;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+.container {
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: auto;
+    font-family: 'Raleway', sans-serif;
+}
+
+.logo {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    max-width: 500px;
+    padding: 1.5rem 0;
+    align-items: center;
+}
+
+.restaurants {
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 10px 25px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+body {background-color: #ff8000;}
