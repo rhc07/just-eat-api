@@ -30,7 +30,10 @@ async function getRestaurants() {
             return data;
         }
     } catch (err) {
+        let restaurantHeader = document.getElementById('restaurants')
+        restaurantHeader.innerHTML = `<h4>⚠️Server failure: Failed to find restaurants⚠️</h4>`
         console.log(err);
+
     }
 }
 

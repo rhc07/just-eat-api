@@ -34,3 +34,6 @@ A simple application that generates local restaurants when the user inputs a pos
 
 #### Visit:
 - [Local Host](http://localhost:8080/)
+
+#### Tests:
+- `go test`
