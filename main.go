@@ -9,6 +9,11 @@ import (
 	"net/http"
 )
 
+//APIURL variable is set in the main function
+var (
+	APIURL string
+)
+
 //restaurants struct sets up the required properties of each restaurant
 type restaurant struct {
 	Name          string  `json:"name"`
@@ -75,7 +80,6 @@ func main() {
 	postcode := GetPostcode(input)
 
 	//APIURL for API
-	var APIURL string
 	APIURL = "https://uk.api.just-eat.io/restaurants/bypostcode/" + postcode
 
 	router := mux.NewRouter()
