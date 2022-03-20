@@ -9,11 +9,6 @@ import (
 	"net/http"
 )
 
-//APIURL is a global variable used in the main function
-var (
-	APIURL string
-)
-
 //restaurants struct sets up the required properties of each restaurant
 type restaurant struct {
 	Name          string  `json:"name"`
@@ -25,8 +20,8 @@ type restaurantsList struct {
 	Restaurants []restaurant `json:"restaurants"`
 }
 
-//apiCall sends a http Get request to the api to fetch the data
-func apiCall(w http.ResponseWriter, r *http.Request) {
+//ApiHandler sends a http Get request to the api to fetch the data
+func ApiHandler(w http.ResponseWriter, r *http.Request) {
 	//For receiving API call
 	client := http.Client{}
 	apiRequest, httperr := http.NewRequest(http.MethodGet, APIURL, nil)
@@ -80,10 +75,11 @@ func main() {
 	postcode := GetPostcode(input)
 
 	//APIURL for API
+	var APIURL string
 	APIURL = "https://uk.api.just-eat.io/restaurants/bypostcode/" + postcode
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", apiCall)
+	router.HandleFunc("/", ApiHandler)
 	fmt.Println("Listening of port 8080")
 	servErr := http.ListenAndServe(":8080", router)
 	if servErr != nil {

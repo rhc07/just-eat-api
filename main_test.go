@@ -7,7 +7,7 @@ func TestGetPostcode(t *testing.T) {
 		input  string
 		output string
 	}{
-		{input: "SE153RP", output: "SE153RP"},
+		{input: "SW25RR", output: "SW25RR"},
 		{input: "SE153", output: "SE153"},
 	}
 
