@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
@@ -27,24 +28,36 @@ type restaurantsList struct {
 
 //ApiHandler sends a http Get request to the api to fetch the data
 func ApiHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	postcode := vars["postcode"]
+	err := Validate(postcode)
+	if err != nil {
+		log.Println("error: postcode is not valid")
+		return
+	}
 	//For receiving API call
 	client := http.Client{}
-	apiRequest, httperr := http.NewRequest(http.MethodGet, APIURL, nil)
+	apiRequest, httperr := http.NewRequest(http.MethodGet, APIURL+postcode, nil)
 	if httperr != nil {
-		log.Fatal(httperr)
+		log.Println("error: http request is not valid")
+		return
 	}
 	apiResponse, geterr := client.Do(apiRequest)
 	if geterr != nil {
-		log.Fatal(geterr)
+		log.Println("error: no response from api")
+		return
 	}
+	defer apiResponse.Body.Close()
 	apiBody, readerr := ioutil.ReadAll(apiResponse.Body)
 	if readerr != nil {
-		log.Fatal(readerr)
+		log.Println("error: api body could not be read")
+		return
 	}
 	restaurants := restaurantsList{}
 	jsonerr := json.Unmarshal(apiBody, &restaurants)
 	if jsonerr != nil {
-		log.Fatal(jsonerr)
+		log.Println("error: json could not be unmarshalled")
+		return
 	}
 	//For sending API call
 	w.Header().Set("Access-Control-Allow-Origin", "*") //This heading is necessary for cross-origin data transfer
@@ -53,37 +66,26 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetInput() string {
-	fmt.Println("Enter your postcode (please do not leave any whitespace between characters): ")
-	var input string
-	fmt.Scanln(&input)
-	fmt.Println(input)
-	return input
-}
-
-//GetPostcode function gets a postcode from user input
-func GetPostcode(input string) string {
-	if input == "" {
-		log.Fatalf("Invalid postcode: no input")
+//Validate function checks the postcode from user input
+func Validate(postcode string) error {
+	if postcode == "" {
+		return errors.New("invalid postcode: no input")
 	}
-	if len(input) > 7 {
-		log.Fatalf("Invalid postcode: too many characters")
+	if len(postcode) > 7 {
+		return errors.New("invalid postcode: too many characters")
 	}
-	if len(input) < 5 {
-		log.Fatalf("Invalid postcode: not enough characters")
+	if len(postcode) < 3 {
+		return errors.New("invalid postcode: not enough characters")
 	}
-	return input
+	return nil
 }
 
 func main() {
-	input := GetInput()
-	postcode := GetPostcode(input)
-
 	//APIURL for API
-	APIURL = "https://uk.api.just-eat.io/restaurants/bypostcode/" + postcode
+	APIURL = "https://uk.api.just-eat.io/restaurants/bypostcode/"
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", ApiHandler)
+	router.HandleFunc("/postcode/{postcode}", ApiHandler)
 	fmt.Println("Listening of port 8080")
 	servErr := http.ListenAndServe(":8080", router)
 	if servErr != nil {

@@ -3,59 +3,68 @@ function formSubmitEventHandler() {
     let button = document.getElementById("submit");
     button.addEventListener('click', function(event) {
         event.preventDefault();
-        getPostcode();
+        document.getElementById("restaurants").innerHTML = "";
+        validatePostcode();
     })
 }
 
-function getPostcode(){
-    let postcode = document.getElementById("postcode").value
-    if (postcode !== ""){
-        console.log(postcode);
-        getRestaurants();
-        return postcode;
-    } else {
+function validatePostcode(){
+    let input = document.getElementById("postcode").value
+    let postcode = input.replace(/\s+/g, '')
+    if (postcode === ""){
+        alert("Invalid input, please try again")
         console.log("Invalid input, please try again")
-        return "Invalid input, please try again"
+    } else if (postcode.length > 7) {
+        alert("invalid postcode: too many characters")
+        console.log("Invalid postcode: too many characters")
+    } else if (postcode.length < 3) {
+        alert("invalid postcode: not enough characters")
+        console.log("Invalid postcode: not enough characters")
+    } else {
+        console.log(postcode);
+        apiRequest(postcode)
+        return postcode;
     }
 }
 
-async function getRestaurants() {
+async function apiRequest(postcode) {
     try {
-        const response = await fetch('http://localhost:8080/')
-
+        const response = await fetch(`http://localhost:8080/postcode/${postcode}`)
         if (response.ok) {
             const data = await response.json();
             console.log(data);
-            display(data)
-            return data;
+            validate(data)
         }
     } catch (err) {
         let restaurantHeader = document.getElementById('restaurants')
         restaurantHeader.innerHTML = `<h4>⚠️Server failure: Failed to find restaurants⚠️</h4>`
         console.log(err);
-
     }
 }
 
-function display(data) {
-    let items = data
-    console.log(items)
-    for (let key in items) {
-        items[key].forEach( function(item) {
-            console.log(item)
-            for (const [key, value] of Object.entries(item)) {
-                let newData = (`<br>${key}: ${value}<br>`)
-                showRestaurants(newData)
-            }
+function validate(data){
+    if (data["restaurants"].length === 0){
+        alert("invalid postcode. please try again")
+        console.log("invalid postcode. please try again")
+    } else {
+        iterate(data)
+    }
+}
+
+function iterate(data) {
+    for (let key in data) {
+        data[key].forEach( function(restaurant) {
+            let restaurants = (`<br>${restaurant["name"]}: ${restaurant["ratingAverage"]}<br>`)
+            display(restaurants)
         })
     }
 }
 
-function showRestaurants(data){
-    let restaurants = document.getElementById('restaurants')
+function display(restaurants){
+    let list = document.getElementById('restaurants')
     let restaurantHeader = document.getElementById('restaurant-header')
-    restaurantHeader.innerHTML = `<h4>Restaurants</h4>`
-    restaurants.innerHTML += data;
+    restaurantHeader.innerHTML = `<h3>Restaurants 🍔: Rating ⭐️</h3>`
+    list.innerHTML += restaurants;
 }
 
 function handleClearAll() {

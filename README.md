@@ -2,9 +2,12 @@
 
 A simple application that generates local restaurants when the user inputs a postcode.
 
+### Technical Questions:
+[Answers](Technical-Questions.md)
+
 ### Stack
 - Go on the backend/server
-- Vanilla Javascript on the Front-end (Still in progress ⌛️)
+- Vanilla Javascript on the Front-end
 - HTML static page
 
 ### Requirements
@@ -25,26 +28,20 @@ A simple application that generates local restaurants when the user inputs a pos
 
 ### Build and Run
 
-#### Build:
+#### Build & Run:
 - `go build`
-
-#### Run:
 - `./main`
-- Type in a postcode after seeing this command in the termainal: `Enter your postcode:`
+
+**OR**
+
+- `go run main.go`
+
+You should see the following in your terminal:
+![Terminal Screenshot](./images/terminal-screenshot.png "Terminal Screenshot")
 
 #### Visit:
-- [Local Host](http://localhost:8080/)
-- Your local host link should look something like this:
-![Local host Screenshot](./images/local-host.png "Local Host Screenshot")
-
-##### UI (Not finished⌛):
-- You can also see these restaurants on the UI after re-submitting your postcode on the form. The form can't send `POST` requests yet, so you can only view the postcode sent on the server terminal after clicking `submit`:
-
-
-
-
-https://user-images.githubusercontent.com/76108704/159246302-9b166710-bf5a-44bf-b774-f2e5fe6f76f0.mov
-
+- Once the server is running successfully, open your `index.html` file in your browser.
+- Type in a postcode and wait for your restaurants to appear.
 
 
 #### Tests:

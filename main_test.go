@@ -1,20 +1,25 @@
 package main
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
-func TestGetPostcode(t *testing.T) {
+func TestValidate(t *testing.T) {
 	tests := []struct {
-		input  string
-		output string
+		input string
+		error error
 	}{
-		{input: "SW25RR", output: "SW25RR"},
-		{input: "SE153", output: "SE153"},
+		{input: "SW25RR", error: nil},
+		{input: "SE153", error: nil},
+		{input: "SE15", error: errors.New("invalid postcode: not enough characters")},
+		{input: "SE153RPP", error: errors.New("invalid postcode: too many characters")},
 	}
 
 	for _, test := range tests {
-		postcode := GetPostcode(test.input)
-		if postcode != test.output {
-			t.Errorf("Postcode: %s was incorrect, got: %s, want: %s.", test.input, postcode, test.output)
+		err := Validate(test.input)
+		if err != test.error {
+			t.Errorf("Postcode: %s was incorrect, got: %s, want: %s.", test.input, err, test.error)
 		}
 	}
 }
