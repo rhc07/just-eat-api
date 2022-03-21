@@ -34,6 +34,12 @@ A simple application that generates local restaurants when the user inputs a pos
 
 #### Visit:
 - [Local Host](http://localhost:8080/)
+- Your local host link should look something like this:
+![Local host Screenshot](./images/local-host.png "Local Host Screenshot")
+
+##### UI (Not finished⌛):
+- You can also see these restaurants on the UI after re-submitting your postcode on the form. Form can't send POST requests yet, so you cannot use it dynamically:
+  ![UI Recording](./images/UI-Recording.mov "UI Recording")
 
 #### Tests:
 - `go test`
