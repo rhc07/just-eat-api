@@ -44,5 +44,9 @@ You should see the following in your terminal:
 - Type in a postcode and wait for your restaurants to appear.
 
 
+https://user-images.githubusercontent.com/76108704/159351270-24c19f22-3c9b-4c67-99d2-c625a7093579.mov
+
+
+
 #### Tests:
 - `go test`
