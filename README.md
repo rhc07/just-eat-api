@@ -2,9 +2,6 @@
 
 A simple application that generates local restaurants when the user inputs a postcode.
 
-### Technical Questions:
-[Answers](Technical-Questions.md)
-
 ### Stack
 - Go on the backend/server
 - Vanilla Javascript on the Front-end
